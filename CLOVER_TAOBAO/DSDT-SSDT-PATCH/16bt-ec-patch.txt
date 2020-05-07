@@ -1,0 +1,28 @@
+//DSDT-patch-for 16-bit-EC-filed (battery status)
+
+into method label B1B2 remove_entry;
+into definitionblock code_regex . insert
+begin
+Method (B1B2, 2, NotSerialized) { Return(Or(Arg0, ShiftLeft(Arg1, 8))) }\n
+end;
+
+into device label H_EC code_regex BDCA,\s+16, replace_matched begin DCA0,8,DCA1,8, end;
+into method label _BIF code_regex \(BDCA, replaceall_matched begin (B1B2(DCA0,DCA1), end;
+
+into device label H_EC code_regex BPVO,\s+16, replace_matched begin PVO0,8,PVO1,8, end;
+into method label _BST code_regex \(BPVO, replaceall_matched begin (B1B2(PVO0,PVO1), end;
+
+into device label H_EC code_regex BRCA,\s+16, replace_matched begin RCA0,8,RCA1,8, end;
+into method label _BST code_regex \(BRCA, replaceall_matched begin (B1B2(RCA0,RCA1), end;
+
+into device label H_EC code_regex BLFC,\s+16, replace_matched begin LFC0,8,LFC1,8, end;
+into method label _BIF code_regex \(BLFC, replaceall_matched begin (B1B2(LFC0,LFC1), end;
+
+into device label H_EC code_regex BSTA,\s+16, replace_matched begin STA0,8,STA1,8, end;
+into method label _BST code_regex \(BSTA, replaceall_matched begin (B1B2(STA0,STA1), end;
+
+into device label H_EC code_regex BDVO,\s+16, replace_matched begin DVO0,8,DVO1,8, end;
+into method label _BIF code_regex \(BDVO, replaceall_matched begin (B1B2(DVO0,DVO1), end;
+
+into device label H_EC code_regex BACU,\s+16, replace_matched begin ACU0,8,ACU1,8, end;
+into method label _BST code_regex \(BACU, replaceall_matched begin (B1B2(ACU0,ACU1), end;
